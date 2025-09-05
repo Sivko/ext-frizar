@@ -1,6 +1,9 @@
 // Background Script для Chrome расширения
 console.log('Ext Frizar: Background script loaded')
 
+// Импортируем конфигурацию webhook'ов
+import { getWebhookUrl } from '../config/webhooks'
+
 // Обработчик установки расширения
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('Extension installed:', details)
@@ -9,6 +12,13 @@ chrome.runtime.onInstalled.addListener((details) => {
   chrome.storage.local.set({
     isActive: false,
     installDate: new Date().toISOString()
+  })
+  
+  // Создаем контекстное меню
+  chrome.contextMenus.create({
+    id: 'open-frizar-modal',
+    title: 'Открыть Ext Frizar',
+    contexts: ['page']
   })
 })
 
@@ -65,14 +75,33 @@ chrome.action.onClicked.addListener((tab) => {
   console.log('Extension icon clicked for tab:', tab.id)
 })
 
+// Обработчик клика по контекстному меню
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === 'open-frizar-modal' && tab?.id) {
+    console.log('Context menu clicked for tab:', tab.id)
+    // Отправляем сообщение в content script для открытия модалки
+    chrome.tabs.sendMessage(tab.id, { 
+      action: 'openModal'
+    })
+  }
+})
+
 // Функция для отправки данных на webhook'и
 async function sendDataToWebhooks(payload: any) {
   try {
     console.log('Background sending data:', payload)
 
-    // Получаем URL из переменных окружения
-    const testWebhookUrl = process.env.WEBHOOK_TEST_URL || ''
-    const prodWebhookUrl = process.env.WEBHOOK_PROD_URL || ''
+    // Получаем URL'ы webhook'ов из конфигурации
+    const testWebhookUrl = getWebhookUrl('test')
+    const prodWebhookUrl = getWebhookUrl('prod')
+
+    console.log('Test webhook URL configured:', !!testWebhookUrl)
+    console.log('Prod webhook URL configured:', !!prodWebhookUrl)
+
+    // Проверяем, что URL'ы не пустые
+    if (!testWebhookUrl || !prodWebhookUrl) {
+      throw new Error('Webhook URLs are not configured')
+    }
 
     // Отправляем запросы параллельно
     const promises = [
@@ -94,6 +123,9 @@ async function sendDataToWebhooks(payload: any) {
 
     // Ждем только второй запрос (с ожиданием)
     const [, response2] = await Promise.all(promises)
+    
+    console.log('Response status:', response2.status)
+    console.log('Response ok:', response2.ok)
     
     if (response2.ok) {
       return { success: true }

@@ -54,6 +54,17 @@ const App: React.FC = () => {
     chrome.storage.local.set({ userName: name })
   }
 
+  const openModal = () => {
+    // Отправляем сообщение в content script для открытия модалки
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, { 
+          action: 'openModal'
+        })
+      }
+    })
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -90,8 +101,16 @@ const App: React.FC = () => {
           {isActive ? 'Отключить' : 'Включить'}
         </button>
         
+        <button 
+          className="modal-btn"
+          onClick={openModal}
+        >
+          Открыть модалку
+        </button>
+        
         <div className="hotkey-info">
           <p>Горячие клавиши: <kbd>Alt+K</kbd></p>
+          <p>Контекстное меню: ПКМ → "Открыть Ext Frizar"</p>
         </div>
       </main>
       

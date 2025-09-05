@@ -34,3 +34,6 @@ dist-ssr
 *.crx
 *.pem
 key.pem
+
+# Configuration files with sensitive data
+src/config/endpoints.ts

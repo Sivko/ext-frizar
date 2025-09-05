@@ -150,6 +150,25 @@
   transform: translateY(-2px);
 }
 
+.modal-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #ff9800;
+  color: white;
+}
+
+.modal-btn:hover {
+  background: #f57c00;
+  transform: translateY(-2px);
+}
+
 .hotkey-info {
   text-align: center;
   font-size: 12px;

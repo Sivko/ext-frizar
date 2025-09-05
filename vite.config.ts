@@ -5,11 +5,6 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  define: {
-    // Переменные окружения для использования в коде
-    'process.env.WEBHOOK_TEST_URL': JSON.stringify(process.env.WEBHOOK_TEST_URL),
-    'process.env.WEBHOOK_PROD_URL': JSON.stringify(process.env.WEBHOOK_PROD_URL),
-  },
   build: {
     outDir: 'dist',
     rollupOptions: {

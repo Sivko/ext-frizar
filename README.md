@@ -18,11 +18,12 @@ Google Chrome расширение, созданное с использован
    npm install
    ```
 
-3. Создайте файл `.env` в корне проекта:
+3. Настройте эндпоинты webhook'ов:
    ```bash
-   # Webhook URLs для Chrome расширения
-   WEBHOOK_TEST_URL=https://nudhafakuepas.beget.app/webhook-test/ext-data
-   WEBHOOK_PROD_URL=https://nudhafakuepas.beget.app/webhook/ext-data
+   # Скопируйте пример конфигурации
+   cp src/config/endpoints.example.ts src/config/endpoints.ts
+   
+   # Отредактируйте файл src/config/endpoints.ts и укажите ваши реальные URL'ы
    ```
 
 4. Соберите проект:
@@ -60,9 +61,19 @@ src/
 │   └── index.html  # HTML шаблон
 ├── content/        # Content Script
 │   └── content.ts  # Скрипт для веб-страниц
-└── background/     # Background Script
-    └── background.ts # Фоновый скрипт
+├── background/     # Background Script
+│   └── background.ts # Фоновый скрипт
+└── config/        # Конфигурация
+    ├── endpoints.example.ts # Пример конфигурации эндпоинтов
+    ├── endpoints.ts         # Реальные эндпоинты (не в git)
+    └── webhooks.ts          # Логика работы с webhook'ами
 ```
+
+## Безопасность
+
+- Файл `src/config/endpoints.ts` с реальными эндпоинтами автоматически игнорируется git'ом
+- Используйте `endpoints.example.ts` как шаблон для настройки
+- Никогда не коммитьте реальные URL'ы в репозиторий
 
 ## Технологии
 

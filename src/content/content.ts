@@ -12,6 +12,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     handleToggle(message.isActive)
   }
   
+  if (message.action === 'openModal') {
+    openModal()
+  }
+  
   sendResponse({ success: true })
 })
 
