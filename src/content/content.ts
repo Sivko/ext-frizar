@@ -1,16 +1,11 @@
 // Content Script для взаимодействия с веб-страницами
 console.log('Ext Frizar: Content script loaded')
 
-let isExtensionActive = false
 let modalElement: HTMLElement | null = null
 
 // Слушаем сообщения от popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Content script received message:', message, sender)
-  
-  if (message.action === 'toggle') {
-    handleToggle(message.isActive)
-  }
   
   if (message.action === 'openModal') {
     openModal()
@@ -19,86 +14,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   sendResponse({ success: true })
 })
 
-function handleToggle(isActive: boolean) {
-  console.log('Toggle extension:', isActive)
-  isExtensionActive = isActive
-  
-  if (isActive) {
-    // Активируем функциональность расширения
-    activateExtension()
-  } else {
-    // Деактивируем функциональность расширения
-    deactivateExtension()
-  }
-}
-
-function activateExtension() {
-  console.log('Activating extension...')
-  
-  // Добавляем индикатор активности
-  const indicator = document.createElement('div')
-  indicator.id = 'ext-frizar-indicator'
-  indicator.style.cssText = `
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 20px;
-    height: 20px;
-    background: #4caf50;
-    border-radius: 50%;
-    z-index: 10000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    animation: pulse 2s infinite;
-  `
-  
-  // Добавляем CSS анимацию
-  const style = document.createElement('style')
-  style.textContent = `
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.1); opacity: 0.7; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-  `
-  document.head.appendChild(style)
-  document.body.appendChild(indicator)
+// Инициализируем расширение при загрузке страницы
+function initializeExtension() {
+  console.log('Initializing extension...')
   
   // Добавляем обработчик горячих клавиш
   document.addEventListener('keydown', handleKeyDown)
 }
 
-function deactivateExtension() {
-  console.log('Deactivating extension...')
-  
-  // Удаляем индикатор
-  const indicator = document.getElementById('ext-frizar-indicator')
-  if (indicator) {
-    indicator.remove()
-  }
-  
-  // Удаляем обработчик горячих клавиш
-  document.removeEventListener('keydown', handleKeyDown)
-  
-  // Закрываем модальное окно если открыто
-  closeModal()
-}
-
-// Проверяем состояние при загрузке страницы
-chrome.storage.local.get(['isActive'], (result) => {
-  if (result.isActive) {
-    isExtensionActive = true
-    activateExtension()
-  }
-})
+// Инициализируем расширение сразу при загрузке
+initializeExtension()
 
 // Обработчик горячих клавиш
 function handleKeyDown(event: KeyboardEvent) {
   // Проверяем Alt+K
   if (event.altKey && event.key === 'k') {
     event.preventDefault()
-    if (isExtensionActive) {
-      openModal()
-    }
+    openModal()
   }
 }
 
@@ -115,7 +47,7 @@ function openModal() {
     <div class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Добавить заметку</h3>
+          <h3>Добавить задачку IT отделу</h3>
           <button class="modal-close">&times;</button>
         </div>
         <div class="modal-body">
@@ -332,16 +264,16 @@ async function sendNote(message: string) {
     })
     
     if (result?.success) {
-      showNotification('Заметка успешно отправлена!', 'success')
+      showNotification('Задачка успешно отправлена!', 'success')
     } else {
-      showNotification('Ошибка при отправке заметки', 'error')
+      showNotification('Ошибка при отправке', 'error')
     }
     
     closeModal()
     
   } catch (error) {
     console.error('Error sending note:', error)
-    showNotification('Ошибка при отправке заметки', 'error')
+    showNotification('Ошибка при отправке', 'error')
     closeModal()
   }
 }

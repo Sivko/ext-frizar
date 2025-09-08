@@ -9,7 +9,6 @@ interface TabInfo {
 
 const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabInfo>({})
-  const [isActive, setIsActive] = useState(false)
   const [userName, setUserName] = useState('')
 
   useEffect(() => {
@@ -24,30 +23,12 @@ const App: React.FC = () => {
       }
     })
 
-    // Получаем состояние расширения и имя пользователя из storage
-    chrome.storage.local.get(['isActive', 'userName'], (result) => {
-      setIsActive(result.isActive || false)
+    // Получаем имя пользователя из storage
+    chrome.storage.local.get(['userName'], (result) => {
       setUserName(result.userName || '')
     })
   }, [])
 
-  const toggleExtension = () => {
-    const newState = !isActive
-    setIsActive(newState)
-    
-    // Сохраняем состояние в storage
-    chrome.storage.local.set({ isActive: newState })
-    
-    // Отправляем сообщение в content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, { 
-          action: 'toggle', 
-          isActive: newState 
-        })
-      }
-    })
-  }
 
   const saveUserName = (name: string) => {
     setUserName(name)
@@ -70,8 +51,8 @@ const App: React.FC = () => {
       <header className="header">
         <h1>Ext Frizar</h1>
         <div className="status">
-          <span className={`status-indicator ${isActive ? 'active' : 'inactive'}`}>
-            {isActive ? 'Активно' : 'Неактивно'}
+          <span className="status-indicator active">
+            Всегда активно
           </span>
         </div>
       </header>
@@ -93,13 +74,6 @@ const App: React.FC = () => {
           <p className="tab-title">{currentTab.title}</p>
           <p className="tab-url">{currentTab.url}</p>
         </div>
-        
-        <button 
-          className={`toggle-btn ${isActive ? 'active' : 'inactive'}`}
-          onClick={toggleExtension}
-        >
-          {isActive ? 'Отключить' : 'Включить'}
-        </button>
         
         <button 
           className="modal-btn"

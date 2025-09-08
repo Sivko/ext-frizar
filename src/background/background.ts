@@ -8,9 +8,9 @@ import { getWebhookUrl } from '../config/webhooks'
 chrome.runtime.onInstalled.addListener((details) => {
   console.log('Extension installed:', details)
   
-  // Устанавливаем начальные настройки
+  // Устанавливаем начальные настройки - расширение всегда активно
   chrome.storage.local.set({
-    isActive: false,
+    isActive: true,
     installDate: new Date().toISOString()
   })
   
