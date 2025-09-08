@@ -17,7 +17,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   // Создаем контекстное меню
   chrome.contextMenus.create({
     id: 'open-frizar-modal',
-    title: 'Открыть Ext Frizar',
+    title: 'Открыть FRIZAR (Уведомления для IT)',
     contexts: ['page']
   })
 })

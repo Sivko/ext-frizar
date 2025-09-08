@@ -1,5 +1,5 @@
 // Content Script для взаимодействия с веб-страницами
-console.log('Ext Frizar: Content script loaded')
+console.log('FRIZAR (Уведомления для IT): Content script loaded')
 
 let modalElement: HTMLElement | null = null
 

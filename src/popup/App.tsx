@@ -49,12 +49,7 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <header className="header">
-        <h1>Ext Frizar</h1>
-        <div className="status">
-          <span className="status-indicator active">
-            Всегда активно
-          </span>
-        </div>
+        <h1>FRIZAR (Уведомления для IT)</h1>
       </header>
       
       <main className="main">
@@ -84,7 +79,7 @@ const App: React.FC = () => {
         
         <div className="hotkey-info">
           <p>Горячие клавиши: <kbd>Alt+K</kbd></p>
-          <p>Контекстное меню: ПКМ → "Открыть Ext Frizar"</p>
+          <p>Контекстное меню: ПКМ → "Открыть FRIZAR (Уведомления для IT)"</p>
         </div>
       </main>
       
